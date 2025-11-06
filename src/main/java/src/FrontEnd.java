@@ -31,7 +31,7 @@ public class FrontEnd extends JPanel implements ActionListener {
     private static final int WINDOW_HEIGHT = 450;
     private static final int WINDOW_X = 350;
     private static final int WINDOW_Y = 150;
-    private static final String DB_URL = "jdbc:mysql://localhost/3dface";
+    private static final String DB_URL = "jdbc:mysql://localhost/face_recognition";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
 
