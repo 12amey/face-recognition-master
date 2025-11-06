@@ -1,0 +1,266 @@
+================================================================================
+        FACE RECOGNITION SYSTEM - SETUP CHECKLIST
+================================================================================
+
+Print this checklist and mark items as you complete them!
+
+--------------------------------------------------------------------------------
+PHASE 1: INSTALL PREREQUISITES
+--------------------------------------------------------------------------------
+
+[ ] Install Java JDK 8 or higher
+    URL: https://www.oracle.com/java/technologies/downloads/
+    Verify: java -version
+    
+[ ] Set JAVA_HOME environment variable
+    Windows: System Properties > Environment Variables
+    Add: JAVA_HOME = C:\Program Files\Java\jdk1.8.0_xxx
+    
+[ ] Install Apache Maven 3.6+
+    URL: https://maven.apache.org/download.cgi
+    Verify: mvn -version
+    
+[ ] Install MySQL Server 8.0+
+    URL: https://dev.mysql.com/downloads/mysql/
+    Verify: mysql --version
+    Remember: MySQL root password = _______________
+
+[ ] Install Git (optional - if cloning from GitHub)
+    URL: https://git-scm.com/downloads
+    Verify: git --version
+
+--------------------------------------------------------------------------------
+PHASE 2: DATABASE SETUP
+--------------------------------------------------------------------------------
+
+[ ] Start MySQL service
+    Command: net start MySQL80
+    Verify: Get-Service MySQL80
+    
+[ ] Login to MySQL
+    Command: mysql -u root -p
+    
+[ ] Create face_recognition database
+    SQL: CREATE DATABASE face_recognition;
+    
+[ ] Select the database
+    SQL: USE face_recognition;
+    
+[ ] Create users table
+    SQL: CREATE TABLE users (
+           UserName VARCHAR(30),
+           Email VARCHAR(50),
+           Phone VARCHAR(10),
+           Password VARCHAR(20)
+         );
+    
+[ ] Verify table creation
+    SQL: SHOW TABLES;
+    SQL: DESCRIBE users;
+    
+[ ] Exit MySQL
+    SQL: EXIT;
+
+Alternative: [ ] Run setup-database.sql script
+    Command: mysql -u root -p < setup-database.sql
+
+--------------------------------------------------------------------------------
+PHASE 3: DOWNLOAD DEPENDENCIES
+--------------------------------------------------------------------------------
+
+[ ] Navigate to project directory
+    Command: cd c:\Users\deshm\Downloads\face-recognition-master\face-recognition-master
+    
+[ ] Run automated setup script (CHOOSE ONE):
+    [ ] Option A: setup.ps1
+        Command: .\setup.ps1
+        OR: PowerShell -ExecutionPolicy Bypass -File setup.ps1
+        
+    [ ] Option B: setup.bat
+        Command: setup.bat
+
+[ ] Verify lib directory created
+    Command: dir lib
+    
+[ ] Verify Java 3D libraries downloaded:
+    [ ] j3d-core.jar (check: dir lib\j3d-core.jar)
+    [ ] j3d-utils.jar (check: dir lib\j3d-utils.jar)
+    [ ] vecmath.jar (check: dir lib\vecmath.jar)
+    
+[ ] Verify JAI libraries downloaded:
+    [ ] jai_core.jar (check: dir lib\jai_core.jar)
+    [ ] jai_codec.jar (check: dir lib\jai_codec.jar)
+    
+[ ] Verify Windows DLLs copied to Java bin
+    Check: dir "%JAVA_HOME%\bin\j3d*.dll"
+    Should see: j3dcore-ogl.dll and related files
+
+--------------------------------------------------------------------------------
+PHASE 4: BUILD PROJECT
+--------------------------------------------------------------------------------
+
+[ ] Clean previous builds
+    Command: mvn clean
+    
+[ ] Build the project
+    Command: mvn install
+    OR: mvn clean install
+    
+[ ] Verify build success
+    Look for: "BUILD SUCCESS" in output
+    
+[ ] Verify JAR files created:
+    [ ] target\face-recognition-1.0-SNAPSHOT.jar
+    [ ] target\face-recognition-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+--------------------------------------------------------------------------------
+PHASE 5: RUN APPLICATION
+--------------------------------------------------------------------------------
+
+[ ] Start MySQL (if not already running)
+    Command: net start MySQL80
+    
+[ ] Run the application (CHOOSE ONE):
+    [ ] Option A: Maven exec
+        Command: mvn exec:java -Dexec.mainClass="src.Main"
+        
+    [ ] Option B: JAR file
+        Command: java -jar target\face-recognition-1.0-SNAPSHOT-jar-with-dependencies.jar
+        
+    [ ] Option C: With classpath
+        Command: java -cp "target\face-recognition-1.0-SNAPSHOT.jar;lib\*" src.Main
+        
+    [ ] Option D: Run script
+        Command: run.bat
+    
+[ ] Application window opens successfully
+
+--------------------------------------------------------------------------------
+PHASE 6: TEST APPLICATION
+--------------------------------------------------------------------------------
+
+[ ] Click "Load Images" button
+[ ] Select a folder with face images (.jpg or .png)
+[ ] Images display in face browser
+[ ] Click "Compute Eigen Vectors" button
+[ ] Training completes without errors
+[ ] Click "Identify Face" button
+[ ] Select a test face image
+[ ] Face recognition result displays
+[ ] Click "Display Result Chart" (optional)
+[ ] 3D visualization appears
+
+--------------------------------------------------------------------------------
+TROUBLESHOOTING CHECKLIST
+--------------------------------------------------------------------------------
+
+If you encounter errors, verify:
+
+[ ] Java installation
+    Command: java -version
+    Expected: version 1.8 or higher
+    
+[ ] JAVA_HOME set correctly
+    Command: echo $env:JAVA_HOME
+    Expected: C:\Program Files\Java\jdk1.8.0_xxx
+    
+[ ] Maven installation
+    Command: mvn -version
+    Expected: Apache Maven 3.6+
+    
+[ ] MySQL running
+    Command: Get-Service MySQL80
+    Expected: Status = Running
+    
+[ ] Database exists
+    Command: mysql -u root -p -e "SHOW DATABASES;"
+    Expected: face_recognition in list
+    
+[ ] All JAR files present
+    Command: dir lib
+    Expected: 5 JAR files (minimum)
+    
+[ ] DLLs copied to Java bin
+    Command: dir "%JAVA_HOME%\bin\j3d*.dll"
+    Expected: Several j3d*.dll files
+    
+[ ] Build successful
+    Command: mvn clean install
+    Expected: BUILD SUCCESS
+
+Common Error Solutions:
+
+[ ] UnsatisfiedLinkError: j3dcore-ogl
+    Fix: Copy-Item platform-specific\windows\*.dll "$env:JAVA_HOME\bin\" -Force
+    
+[ ] ClassNotFoundException: src.Main
+    Fix: mvn clean install
+    
+[ ] SQLException: Access denied
+    Fix: Check MySQL username/password in code
+    
+[ ] OutOfMemoryError
+    Fix: java -Xmx2G -jar target\face-recognition-1.0-SNAPSHOT.jar
+
+--------------------------------------------------------------------------------
+VERIFICATION COMMANDS
+--------------------------------------------------------------------------------
+
+Run these commands to verify your setup:
+
+[ ] Check Java: java -version
+[ ] Check Maven: mvn -version
+[ ] Check MySQL: Get-Service MySQL80
+[ ] Check JAVA_HOME: echo $env:JAVA_HOME
+[ ] Check database: mysql -u root -p -e "USE face_recognition; SHOW TABLES;"
+[ ] Check lib files: dir lib
+[ ] Check DLLs: dir "%JAVA_HOME%\bin\j3d*.dll"
+[ ] Check build: dir target\*.jar
+
+--------------------------------------------------------------------------------
+QUICK REFERENCE
+--------------------------------------------------------------------------------
+
+Project Directory:
+c:\Users\deshm\Downloads\face-recognition-master\face-recognition-master
+
+Key Files:
+- QUICK_START.md .......... Fast 5-step setup guide
+- SETUP_GUIDE.md .......... Detailed setup instructions
+- SETUP_SUMMARY.md ........ Overview of setup files
+- setup.ps1 ............... PowerShell setup script
+- setup.bat ............... Batch setup script
+- setup-database.sql ...... MySQL database script
+- run.bat ................. Quick run script
+- pom.xml ................. Maven configuration
+
+Key Commands:
+- Setup: .\setup.ps1 or setup.bat
+- Database: mysql -u root -p < setup-database.sql
+- Build: mvn clean install
+- Run: mvn exec:java -Dexec.mainClass="src.Main"
+
+--------------------------------------------------------------------------------
+COMPLETION STATUS
+--------------------------------------------------------------------------------
+
+Setup Started: ____/____/________ at ____:____
+
+Phase 1 (Prerequisites) completed: ____/____/________ at ____:____
+Phase 2 (Database) completed: ____/____/________ at ____:____
+Phase 3 (Dependencies) completed: ____/____/________ at ____:____
+Phase 4 (Build) completed: ____/____/________ at ____:____
+Phase 5 (Run) completed: ____/____/________ at ____:____
+Phase 6 (Test) completed: ____/____/________ at ____:____
+
+Setup Fully Completed: ____/____/________ at ____:____
+
+Notes:
+________________________________________________________________________________
+________________________________________________________________________________
+________________________________________________________________________________
+________________________________________________________________________________
+
+================================================================================
+                    SETUP COMPLETE - ENJOY THE APPLICATION!
+================================================================================
